@@ -6,6 +6,5 @@
 2. pip install pandas
 3. pip install os
 4. pip install tkinter
-4. pip install tkinterdnd2
 
 
