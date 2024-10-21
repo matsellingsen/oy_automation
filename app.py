@@ -12,7 +12,8 @@ def run():
         app.destroy()
 
     app = tk.Tk()
-    app.geometry("100x100")
+    app.geometry("100x50")
+    app.eval('tk::PlaceWindow . center')
     B = Button(app, text ="select report", command = create_reports)
     B.pack(side=TOP)
     #B.place(x=50,y=50)
