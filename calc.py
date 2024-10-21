@@ -26,12 +26,11 @@ class readAndSummarize:
     
     def save_reports(self):
         print(self.path)
-     
+    
         directory_index = len(os.listdir(self.path + "\\personal_seller_reports"))
         os.mkdir(self.path + "\\personal_seller_reports\\" + str(directory_index))
 
-        for i, report in enumerate(self.reports):
-           # print(report["Selgernummer"])
+        for report in self.reports:
             file_path = self.path + "\\personal_seller_reports\\" + str(directory_index) + "\\" + report["Selgernummer"]
             print(file_path)
             with open(file_path + ".pdf", "w", encoding="utf-8") as file:
