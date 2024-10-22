@@ -4,11 +4,17 @@ import os
 
 class readAndSummarize:
 
-    def __init__(self):
+    def __init__(self, file):
         self.path = str(pathlib.Path("calc.py").parent.resolve()) #<-- string in Path() should be the name of this python-file.
+        self.read(file)
+        self.clean()
+        self.calculate()
+        self.save_reports()
+
 
     def read(self, file):
-        self.sheet = pd.read_excel(self.path + f"\\zettle_reports\\{file}", engine="openpyxl")
+        self.sheet = pd.read_excel(file)
+        #self.sheet = pd.read_excel(self.path + f"\\zettle_reports\\{file}", engine="openpyxl")
     
     def clean(self):
         self.periode = self.sheet.iloc[3][1]
@@ -26,12 +32,11 @@ class readAndSummarize:
     
     def save_reports(self):
         print(self.path)
-     
+    
         directory_index = len(os.listdir(self.path + "\\personal_seller_reports"))
         os.mkdir(self.path + "\\personal_seller_reports\\" + str(directory_index))
 
-        for i, report in enumerate(self.reports):
-           # print(report["Selgernummer"])
+        for report in self.reports:
             file_path = self.path + "\\personal_seller_reports\\" + str(directory_index) + "\\" + report["Selgernummer"]
             print(file_path)
             with open(file_path + ".pdf", "w", encoding="utf-8") as file:
@@ -47,9 +52,11 @@ class readAndSummarize:
         
 
 
-
+"""
 test = readAndSummarize()
 test.read("Zettle-Sales-By-Product-Report-20240923-20241006.xlsx")
 test.clean()
 test.calculate()
 test.save_reports()
+"""
+
