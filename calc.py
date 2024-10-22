@@ -33,11 +33,11 @@ class readAndSummarize:
     def save_reports(self):
         print(self.path)
     
-        directory_index = len(os.listdir(self.path + "\\personal_seller_reports"))
-        os.mkdir(self.path + "\\personal_seller_reports\\" + str(directory_index))
+        #directory_index = len(os.listdir(self.path + "\\personal_seller_reports"))
+        os.mkdir(self.path + "\\personal_seller_reports\\" + str(self.periode))
 
         for report in self.reports:
-            file_path = self.path + "\\personal_seller_reports\\" + str(directory_index) + "\\" + report["Selgernummer"]
+            file_path = self.path + "\\personal_seller_reports\\" + str(self.periode) + "\\" + report["Selgernummer"]
             print(file_path)
             with open(file_path + ".pdf", "w", encoding="utf-8") as file:
                 file.write("OVERSIKT FOR PERIODEN " + str(self.periode) + "\n\n"
