@@ -2,8 +2,6 @@ import tkinter as tk
 from tkinter import TOP, filedialog, Button
 from calc import readAndSummarize 
 
-
-
 def run():
     def create_reports():
         filepath = filedialog.askopenfilename()
