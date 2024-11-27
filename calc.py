@@ -1,6 +1,11 @@
 import pathlib
 import pandas as pd
 import os
+#from ironpdf import ChromePdfRenderer
+import base64
+import pdfkit
+# TODO: fiks pdf: https://ironpdf.com/python/blog/using-ironpdf-for-python/python-create-pdf-with-text-and-images/
+
 
 class readAndSummarize:
 
@@ -32,24 +37,88 @@ class readAndSummarize:
     
     def save_reports(self):
         print(self.path)
-    
+
         #directory_index = len(os.listdir(self.path + "\\personal_seller_reports"))
         os.mkdir(self.path + "\\personal_seller_reports\\" + str(self.periode))
-
+        
+        # Instantiate Renderer
+        #renderer = ChromePdfRenderer()
+        path_wkhtmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
+        config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf) #<-- CHANGE TO PERSONAL WKHTMLTOPDF-PATH 
         for report in self.reports:
             file_path = self.path + "\\personal_seller_reports\\" + str(self.periode) + "\\" + report["Selgernummer"]
-            print(file_path)
-            with open(file_path + ".pdf", "w", encoding="utf-8") as file:
+            #print(file_path)
+            report_content = """ 
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>PDF Generation Example</title>
+                <style>
+                    body {{
+                        margin: 100px; /* Remove default margin */
+                        padding: 20px; /* Add padding for better visibility */
+                        position: relative; /* Set the body as a relative position */
+                        }}
+                        header {{
+                                text-align: center;
+                                margin-bottom: 40px;
+                                }}
+                        section {{
+                            margin-top: 20px; /* Add margin to separate sections */
+                                }}
+                        img {{
+                            position: absolute;
+                            top: 0px; /* Adjust the top position */
+                            right: 20px; /* Adjust the right position */
+                            }}
+                        p {{
+                            letter-spacing: 20px;
+                            }}
+                </style>
+            </head>
+            <body>
+                <header>
+                    <h1>ÖY Selger Rapport</h1>
+                </header>
+                <section id="contentSection">
+                    <h2>Oversikt for perioden {periode}</h2>
+                    <p>Selgernummer: {selger_nr}</p>
+                    <p>Antall salg: {salg_antall}</p>
+                    <p>Total salgsum: {salg_sum}</p>
+                    <p>Til utbetaling: {utbetaling}</p>
+                        """.format(periode = str(self.periode),selger_nr = str(report['Selgernummer']), salg_antall = str(report['antall salg']), salg_sum = str(report['total salgsum']),utbetaling = str(report["utbetaling"]))
+            
+            with open("OY_logo_svart.png", "rb") as f:
+                pngBinaryData = f.read()
+                imgDataUri = "data:image/png;base64," + base64.b64encode(pngBinaryData).decode("utf-8")
+                imgHtml = f"""
+                            <!-- Embedded Image -->
+                            <img src='{imgDataUri}' width=100px height=100px
+                                alt="ÖY logo">
+                            </section>
+                            </body>
+                            </html>
+                           """
+            
+            report_content += imgHtml #<-- Adding image to html-report
+       
+            # Create a PDF from the HTML string
+            #pdf = renderer.RenderHtmlAsPdf(report_content)
+
+            #pdf.SaveAs(file_path + ".pdf")
+            pdfkit.from_string(report_content, file_path + ".pdf", configuration = config)
+            
+            """
+            with open(file_path + ".txt", "w", encoding="utf-8") as file:
                 file.write("OVERSIKT FOR PERIODEN " + str(self.periode) + "\n\n"
                             + "Selgernummer: " + str(report['Selgernummer']) + "\n"
                             + "Antall salg: " + str(report['antall salg']) + "\n"
                             + "Total salgsum: " + str(report['total salgsum']) + "\n"
                             + "Til utbetaling: " + str(report["utbetaling"])
-                           )
-
-
-
-        
+                           ) 
+            """
 
 
 """
