@@ -80,7 +80,7 @@ class readAndSummarize:
             </head>
             <body>
                 <header>
-                    <h1>ÖY Selger Rapport</h1>
+                    <h1>ÖY Salgsrapport</h1>
                 </header>
                 <section id="contentSection">
                     <h2>Oversikt for perioden {periode}</h2>
