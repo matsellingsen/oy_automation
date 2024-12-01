@@ -1,1 +1,1 @@
-Hei William! Se i Prerequisited.md for å se hva du skal laste ned<3
+A simple application that automates report calculation and creation for individual sellers at ÖY Bergen.
