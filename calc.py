@@ -1,7 +1,6 @@
 import pathlib
 import pandas as pd
 import os
-#from ironpdf import ChromePdfRenderer
 import base64
 import pdfkit
 # TODO: fiks pdf: https://ironpdf.com/python/blog/using-ironpdf-for-python/python-create-pdf-with-text-and-images/
@@ -16,11 +15,9 @@ class readAndSummarize:
         self.calculate()
         self.save_reports()
 
-
     def read(self, file):
         self.sheet = pd.read_excel(file)
-        #self.sheet = pd.read_excel(self.path + f"\\zettle_reports\\{file}", engine="openpyxl")
-    
+
     def clean(self):
         self.periode = self.sheet.iloc[3][1]
         self.sheet = self.sheet.iloc[5:] #Removing top 5 rows
@@ -32,17 +29,13 @@ class readAndSummarize:
         self.reports = list(map(lambda x: {"Selgernummer": x[-4:], 
                                                  "antall salg": self.sheet_sellers.loc[self.sheet_sellers["Navn"] == x, "Totalt antall"].item(),
                                                  "total salgsum": self.sheet_sellers.loc[self.sheet_sellers["Navn"] == x, "Total inkl. mva. (NOK)"].item(),
-                                                 "utbetaling": round(self.sheet_sellers.loc[self.sheet_sellers["Navn"] == x, "Total inkl. mva. (NOK)"].item() * 0.6825, 2)
+                                                 "utbetaling": round(self.sheet_sellers.loc[self.sheet_sellers["Navn"] == x, "Total inkl. mva. (NOK)"].item() * 0.5825, 2)
                                                 }, self.sheet_sellers["Navn"].unique()))
     
     def save_reports(self):
-        print(self.path)
-
-        #directory_index = len(os.listdir(self.path + "\\personal_seller_reports"))
+        
         os.mkdir(self.path + "\\personal_seller_reports\\" + str(self.periode))
         
-        # Instantiate Renderer
-        #renderer = ChromePdfRenderer()
         path_wkhtmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
         config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf) #<-- CHANGE TO PERSONAL WKHTMLTOPDF-PATH 
         for report in self.reports:
@@ -104,28 +97,6 @@ class readAndSummarize:
             
             report_content += imgHtml #<-- Adding image to html-report
        
-            # Create a PDF from the HTML string
-            #pdf = renderer.RenderHtmlAsPdf(report_content)
-
-            #pdf.SaveAs(file_path + ".pdf")
             pdfkit.from_string(report_content, file_path + ".pdf", configuration = config)
             
-            """
-            with open(file_path + ".txt", "w", encoding="utf-8") as file:
-                file.write("OVERSIKT FOR PERIODEN " + str(self.periode) + "\n\n"
-                            + "Selgernummer: " + str(report['Selgernummer']) + "\n"
-                            + "Antall salg: " + str(report['antall salg']) + "\n"
-                            + "Total salgsum: " + str(report['total salgsum']) + "\n"
-                            + "Til utbetaling: " + str(report["utbetaling"])
-                           ) 
-            """
-
-
-"""
-test = readAndSummarize()
-test.read("Zettle-Sales-By-Product-Report-20240923-20241006.xlsx")
-test.clean()
-test.calculate()
-test.save_reports()
-"""
 

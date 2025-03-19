@@ -5,7 +5,6 @@ from calc import readAndSummarize
 def run():
     def create_reports():
         filepath = filedialog.askopenfilename()
-        print(filepath)
         readAndSummarize(filepath)
         app.destroy()
 
@@ -14,8 +13,10 @@ def run():
     app.eval('tk::PlaceWindow . center')
     B = Button(app, text ="select report", command = create_reports)
     B.pack(side=TOP)
-    #B.place(x=50,y=50)
+
     app.mainloop()
 
-run()
+
+if __name__ == "__main__":
+    run()
 
